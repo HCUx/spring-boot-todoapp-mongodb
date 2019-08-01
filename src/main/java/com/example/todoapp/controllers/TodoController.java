@@ -96,8 +96,19 @@ public class TodoController {
     @PostMapping("/additem")
     public ResponseEntity createTodoItem(@RequestBody TodoItem todoItem) {
         try {
-            todoItemRepository.save(todoItem);
-            return ResponseEntity.ok().body(true);
+            if (!todoItem.getLinkedItemId().equals("")){
+                Optional<TodoItem> tempitem = todoItemRepository.findById(todoItem.getLinkedItemId());
+                if(todoItem.getCompleted() == tempitem.get().getCompleted() || tempitem.get().getCompleted()){
+                    todoItem.setLinkedItemName(tempitem.get().getTitle());
+                    todoItemRepository.save(todoItem);
+                    return ResponseEntity.ok().body(true);
+                }else {
+                    return ResponseEntity.ok().body(false);
+                }
+            } else {
+                todoItemRepository.save(todoItem);
+                return ResponseEntity.ok().body(true);
+            }
         }catch (Exception ignored){
             return ResponseEntity.ok().body(false);
         }
@@ -116,7 +127,7 @@ public class TodoController {
         if (todoItem.getId().equals(todoItem.getLinkedItemId()) ){
             return ResponseEntity.ok().body(false);
         }
-        if (!todoItem.getLinkedItemId().equals("")){
+        if (todoItem.getLinkedItemId() != null){
             Optional<TodoItem> tempitem = todoItemRepository.findById(todoItem.getLinkedItemId());
             if(todoItem.getCompleted() == tempitem.get().getCompleted() || tempitem.get().getCompleted()){
                 return todoItemRepository.findById(id)
