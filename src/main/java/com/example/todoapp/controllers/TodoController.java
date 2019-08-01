@@ -26,6 +26,10 @@ public class TodoController {
     @Autowired
     TodoItemRepository todoItemRepository;
 
+    //////////////////////////////////////////////////////
+    ////////////TODO USERS APIS/////////////////
+    //////////////////////////////////////////////////////
+
     @PostMapping("/register")
     public User createUser(@Valid @RequestBody User user) {
         return userRepository.save(user);
@@ -40,6 +44,10 @@ public class TodoController {
         else
             return ResponseEntity.notFound().build();
     }
+
+    //////////////////////////////////////////////////////
+    ////////////TODO LISTS APIS/////////////////
+    //////////////////////////////////////////////////////
 
     @GetMapping("/todos/{ownerid}")
     public List<Todo> getAllUsersTodo(@PathVariable("ownerid") String ownerid) {
@@ -85,8 +93,8 @@ public class TodoController {
 
     //////////////////////////////////////////////////////
     //////////////////////////////////////////////////////
+    ////////////TODO ITEMS APIS/////////////////
     //////////////////////////////////////////////////////
-
 
     @GetMapping(value="/getitems/{parentListId}")
     public List<TodoItem> getTodoItemByOwnerId(@PathVariable("parentListId") String id) {
